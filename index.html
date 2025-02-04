@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+</head>
+<body>
+<form id="dadataForm">
+
+    <strong>Ваше имя<span class="mf-req">*</span></strong><br>
+    <input type="text" name="user_name" value=""><br>
+
+    <strong>Ваше отчество<span class="mf-req">*</span></strong><br>
+    <input type="text" name="user_second_name" value=""><br>
+
+    <strong>Ваша фамилия<span class="mf-req">*</span></strong><br>
+    <input type="text" name="user_last_name" value=""><br>
+
+    <input type="submit" name="submit" value="Отправить">
+</form>
+
+<br>
+<div id="dadataResult"></div>
+
+<script>
+    // ждем полной загрузки конетнта
+    document.addEventListener("DOMContentLoaded", async function() {
+        let params = new URLSearchParams(window.location.search);
+
+        // если есть параметры - выполняем
+        if (params.toString()) {
+            let formData = new FormData();
+
+            params.forEach((value, key) => {
+                formData.append(key, value);
+            });
+
+            // запускаем php файл dadata.php и передаем данные параметров и метод запроса
+            let response = await fetch("dadata.php", {
+                method: "POST",
+                body: formData
+            });
+
+            // запускаем и перезаписываем рузльтат для вывода
+            let result = await response.text();
+            document.getElementById("dadataResult").innerHTML = result;
+        }
+
+        document.getElementById("dadataForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            let formData = new FormData(this); // данные с формы
+
+            // запускаем php файл dadata.php и передаем данные формы и метод запроса
+            let response = await fetch("dadata.php", {
+                method: "POST",
+                body: formData
+            });
+
+            // запускаем и перезаписываем рузльтат для вывода
+            let result = await response.text();
+            document.getElementById("dadataResult").innerHTML = result;
+        });
+    })
+</script>
+</body>
+</html>
